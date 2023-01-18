@@ -1,4 +1,4 @@
-package com.example.cafe
+package com.example.cafe.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,21 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.example.cafe.databinding.FragmentFirstBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.cafe.adapter.CafeAdapter
 import com.example.cafe.viewmodel.CafeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import android.util.Log
+import com.example.cafe.R
+import com.example.cafe.databinding.FragmentCafeListBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class CafeListFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentCafeListBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -31,25 +29,23 @@ class FirstFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_first, container,false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cafe_list, container,false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.cafeViewModel = cafeViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-
-        binding.buttonFirst.setOnClickListener {
-            cafeViewModel.changeCafeName()
-            //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-        }
+        //Log.d("Error", "${cafeViewModel.cafeList}")
+        val cafeAdapter = CafeAdapter(cafeViewModel.cafeList)
+        binding.cafeRv.adapter = cafeAdapter
+        binding.cafeRv.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d("Error", "check destroy")
     }
 }
